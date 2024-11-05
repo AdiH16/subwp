@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lista Knjiga</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Lista Knjiga</h1>
+<a th:href="@{/books/new}">Dodaj Novu Knjigu</a>
+<table>
+  <thead>
+  <tr>
+    <th>Naslov</th>
+    <th>ISBN</th>
+    <th>Autor</th>
+    <th>Kategorija</th>
+    <th>Dostupni Primjerci</th>
+    <th>Akcije</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="book : ${books}">
+    <td th:text="${book.title}">Naslov</td>
+    <td th:text="${book.isbn}">ISBN</td>
+    <td th:text="${book.author.firstName} + ' ' + ${book.author.lastName}">Autor</td>
+    <td th:text="${book.category.name}">Kategorija</td>
+    <td th:text="${book.availableCopies}">Primjerci</td>
+    <td>
+      <a th:href="@{'/books/' + ${book.id} + '/edit'}">Uredi</a>
+      <a th:href="@{'/books/' + ${book.id} + '/delete'}"
+         onclick="return confirm('Da li ste sigurni da želite obrisati ovu knjigu?');">Obriši</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

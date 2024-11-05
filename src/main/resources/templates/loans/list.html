@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lista Zaduživanja</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Lista Zaduživanja</h1>
+<a th:href="@{/loans/new}">Dodaj Novo Zaduživanje</a>
+<table>
+  <thead>
+  <tr>
+    <th>Knjiga</th>
+    <th>Korisnik</th>
+    <th>Datum Zaduživanja</th>
+    <th>Datum Povratka</th>
+    <th>Akcije</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="loan : ${loans}">
+    <td th:text="${loan.book.title}">Knjiga</td>
+    <td th:text="${loan.user.username}">Korisnik</td>
+    <td th:text="${#dates.format(loan.loanDate, 'yyyy-MM-dd')}">Datum Zaduživanja</td>
+    <td th:text="${loan.returnDate != null ? #dates.format(loan.returnDate, 'yyyy-MM-dd') : 'N/A'}">Datum Povratka</td>
+    <td>
+      <a th:href="@{'/loans/' + ${loan.id} + '/edit'}">Uredi</a>
+      <a th:href="@{'/loans/' + ${loan.id} + '/delete'}"
+         onclick="return confirm('Da li ste sigurni da želite obrisati ovo zaduživanje?');">Obriši</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

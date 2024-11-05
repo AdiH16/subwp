@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lista Korisnika</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Lista Korisnika</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Korisničko Ime</th>
+    <th>Email</th>
+    <th>Ime</th>
+    <th>Prezime</th>
+    <th>Uloga</th>
+    <th>Akcije</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.username}">Korisničko Ime</td>
+    <td th:text="${user.email}">Email</td>
+    <td th:text="${user.firstName}">Ime</td>
+    <td th:text="${user.lastName}">Prezime</td>
+    <td th:text="${user.role}">Uloga</td>
+    <td>
+      <a th:href="@{'/users/' + ${user.id} + '/edit'}">Uredi</a>
+      <a th:href="@{'/users/' + ${user.id} + '/delete'}"
+         onclick="return confirm('Da li ste sigurni da želite obrisati ovog korisnika?');">Obriši</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

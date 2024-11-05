@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Registracija Korisnika</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Registracija Korisnika</h1>
+<form th:action="@{/users/register}" th:object="${user}" method="post">
+  <div>
+    <label for="username">Korisničko Ime:</label>
+    <input type="text" id="username" th:field="*{username}" />
+    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+  </div>
+  <div>
+    <label for="password">Lozinka:</label>
+    <input type="password" id="password" th:field="*{password}" />
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" />
+    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+  </div>
+  <div>
+    <label for="firstName">Ime:</label>
+    <input type="text" id="firstName" th:field="*{firstName}" />
+    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+  </div>
+  <div>
+    <label for="lastName">Prezime:</label>
+    <input type="text" id="lastName" th:field="*{lastName}" />
+    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+  </div>
+  <div>
+    <label for="role">Uloga:</label>
+    <select id="role" th:field="*{role}">
+      <option value="USER">USER</option>
+      <option value="ADMIN">ADMIN</option>
+    </select>
+    <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
+  </div>
+  <div>
+    <button type="submit">Registruj se</button>
+  </div>
+</form>
+<a th:href="@{/login}">Već imate nalog? Prijavite se</a>
+</body>
+</html>

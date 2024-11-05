@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Uredi Knjigu</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Uredi Knjigu</h1>
+<form th:action="@{'/books/' + ${book.id}}" th:object="${book}" method="post">
+  <div>
+    <label for="title">Naslov:</label>
+    <input type="text" id="title" th:field="*{title}" />
+    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+  </div>
+  <div>
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn" th:field="*{isbn}" />
+    <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></span>
+  </div>
+  <div>
+    <label for="publishedDate">Datum Izdavanja:</label>
+    <input type="date" id="publishedDate" th:field="*{publishedDate}" />
+  </div>
+  <div>
+    <label for="author">Autor:</label>
+    <select id="author" th:field="*{author.id}">
+      <option th:each="author : ${authors}"
+              th:value="${author.id}"
+              th:text="${author.firstName} + ' ' + ${author.lastName}"
+              th:selected="${author.id} == ${book.author.id}">
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="category">Kategorija:</label>
+    <select id="category" th:field="*{category.id}">
+      <option th:each="category : ${categories}"
+              th:value="${category.id}"
+              th:text="${category.name}"
+              th:selected="${category.id} == ${book.category.id}">
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="availableCopies">Dostupni Primjerci:</label>
+    <input type="number" id="availableCopies" th:field="*{availableCopies}" min="0" />
+    <span th:if="${#fields.hasErrors('availableCopies')}" th:errors="*{availableCopies}"></span>
+  </div>
+  <div>
+    <button type="submit">Ažuriraj</button>
+  </div>
+</form>
+<a th:href="@{/books}">Nazad na listu</a>
+</body>
+</html>

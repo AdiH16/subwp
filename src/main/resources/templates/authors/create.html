@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj Autora</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Dodaj Autora</h1>
+<form th:action="@{/authors}" th:object="${author}" method="post">
+    <div>
+        <label for="firstName">Ime:</label>
+        <input type="text" id="firstName" th:field="*{firstName}" />
+        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+    </div>
+    <div>
+        <label for="lastName">Prezime:</label>
+        <input type="text" id="lastName" th:field="*{lastName}" />
+        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+    </div>
+    <div>
+        <label for="biography">Biografija:</label>
+        <textarea id="biography" th:field="*{biography}"></textarea>
+    </div>
+    <div>
+        <button type="submit">Spremi</button>
+    </div>
+</form>
+<a th:href="@{/authors}">Nazad na listu</a>
+</body>
+</html>

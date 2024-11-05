@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Uredi Kategoriju</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Uredi Kategoriju</h1>
+<form th:action="@{'/categories/' + ${category.id}}" th:object="${category}" method="post">
+  <div>
+    <label for="name">Naziv:</label>
+    <input type="text" id="name" th:field="*{name}" />
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+  </div>
+  <div>
+    <label for="description">Opis:</label>
+    <textarea id="description" th:field="*{description}"></textarea>
+  </div>
+  <div>
+    <button type="submit">Ažuriraj</button>
+  </div>
+</form>
+<a th:href="@{/categories}">Nazad na listu</a>
+</body>
+</html>

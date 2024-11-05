@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Dodaj Zaduživanje</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h1>Dodaj Zaduživanje</h1>
+<form th:action="@{/loans}" th:object="${loan}" method="post">
+  <div>
+    <label for="book">Knjiga:</label>
+    <select id="book" th:field="*{book.id}">
+      <option value="" disabled selected>Izaberite knjigu</option>
+      <option th:each="book : ${books}"
+              th:value="${book.id}"
+              th:text="${book.title}"></option>
+    </select>
+    <span th:if="${#fields.hasErrors('book')}" th:errors="*{book}"></span>
+  </div>
+  <div>
+    <label for="user">Korisnik:</label>
+    <select id="user" th:field="*{user.id}">
+      <option value="" disabled selected>Izaberite korisnika</option>
+      <option th:each="user : ${users}"
+              th:value="${user.id}"
+              th:text="${user.username}"></option>
+    </select>
+    <span th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span>
+  </div>
+  <div>
+    <label for="loanDate">Datum Zaduživanja:</label>
+    <input type="date" id="loanDate" th:field="*{loanDate}" />
+    <span th:if="${#fields.hasErrors('loanDate')}" th:errors="*{loanDate}"></span>
+  </div>
+  <div>
+    <label for="returnDate">Datum Povratka:</label>
+    <input type="date" id="returnDate" th:field="*{returnDate}" />
+  </div>
+  <div>
+    <button type="submit">Spremi</button>
+  </div>
+</form>
+<a th:href="@{/loans}">Nazad na listu</a>
+</body>
+</html>
