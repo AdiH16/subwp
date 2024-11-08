@@ -7,12 +7,17 @@ import org.example.subwp.service.AuthorService;
 import org.example.subwp.service.BookService;
 import org.example.subwp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/books")
@@ -33,6 +38,13 @@ public class BookController {
         return "books/list";
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("book", new Book());
@@ -41,18 +53,24 @@ public class BookController {
         return "books/create";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String createBook(@Valid @ModelAttribute("book") Book book, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("authors", authorService.getAllAuthors());
             model.addAttribute("categories", categoryService.getAllCategories());
+
+
+            System.out.println("Validation errors: " + result.getAllErrors());
+
             return "books/create";
         }
+
 
         Long authorId = book.getAuthor().getId();
         Author author = authorService.getAuthorById(authorId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid author Id:" + authorId));
         book.setAuthor(author);
+
 
         Long categoryId = book.getCategory().getId();
         Category category = categoryService.getCategoryById(categoryId)
@@ -93,3 +111,4 @@ public class BookController {
         return "redirect:/books";
     }
 }
+

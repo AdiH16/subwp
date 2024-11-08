@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -16,12 +17,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @GetMapping
-    public String listUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "users/list";
-    }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -34,32 +29,26 @@ public class UserController {
         if (result.hasErrors()) {
             return "users/register";
         }
-        userService.registerUser(user);
-        return "redirect:/login";
-    }
 
-        @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        User user = userService.getUserById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        model.addAttribute("user", user);
-        return "users/edit";
-    }
 
-    @PostMapping("/{id}")
-    public String updateUser(@PathVariable Long id, @Valid @ModelAttribute("user") User user,
-                             BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            user.setId(id);
-            return "users/edit";
+        if (userService.usernameExists(user.getUsername())) {
+            result.rejectValue("username", "error.user", "Korisničko ime već postoji");
+            return "users/register";
         }
-        userService.updateUser(user);
-        return "redirect:/users";
-    }
 
-    @GetMapping("/{id}/delete")
-    public String deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return "redirect:/users";
+
+        if (userService.emailExists(user.getEmail())) {
+            result.rejectValue("email", "error.user", "Email već postoji");
+            return "users/register";
+        }
+
+
+        Optional<User> registeredUser = userService.registerUser(user);
+        if (registeredUser.isEmpty()) {
+            model.addAttribute("error", "Greška prilikom registracije. Pokušajte ponovo.");
+            return "users/register";
+        }
+
+        return "redirect:/login";
     }
 }

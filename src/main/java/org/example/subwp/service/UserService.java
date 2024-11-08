@@ -19,10 +19,39 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerUser(User user) {
+
+    public Optional<User> registerUser(User user) {
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return Optional.empty();
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return Optional.empty();
+        }
+
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
-        return userRepository.save(user);
+
+
+        return Optional.of(userRepository.save(user));
+    }
+
+
+    public Optional<User> getUserByUsername(String username) {
+        return Optional.ofNullable(userRepository.findByUsername(username));
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return Optional.ofNullable(userRepository.findByEmail(email));
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean usernameExists(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     public List<User> getAllUsers() {
@@ -31,10 +60,6 @@ public class UserService {
 
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
-    }
-
-    public Optional<User> getUserByUsername(String username) {
-        return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
     public void deleteUserById(Long id) {

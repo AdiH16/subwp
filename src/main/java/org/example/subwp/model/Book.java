@@ -3,6 +3,11 @@ package org.example.subwp.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -34,7 +39,10 @@ public class Book {
     private Category category;
 
     @NotNull(message = "Broj dostupnih primjeraka je obavezan")
+    @Column(name = "available_copies")
     private Integer availableCopies;
+
+
 
     public Long getId() {
         return id;

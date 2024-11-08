@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Dodaj Knjigu</h1>
-<form th:action="@{/books}" th:object="${book}" method="post">
+<form th:action="@{/books/new}" th:object="${book}" method="post">
     <div>
         <label for="title">Naslov:</label>
         <input type="text" id="title" th:field="*{title}" />
@@ -18,8 +18,8 @@
         <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></span>
     </div>
     <div>
-        <label for="publishedDate">Datum Izdavanja:</label>
-        <input type="date" id="publishedDate" th:field="*{publishedDate}" />
+            <label for="publishedDate">Datum Izdavanja:</label>
+            <input type="date" id="publishedDate" th:field="*{publishedDate}" />
     </div>
     <div>
         <label for="author">Autor:</label>

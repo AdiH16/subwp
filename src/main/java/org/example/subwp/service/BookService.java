@@ -14,12 +14,17 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public Book saveBook(Book book) {
-        return bookRepository.save(book);
-    }
-
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    public List<Book> getAvailableBooks() {
+        return bookRepository.findByAvailableCopiesGreaterThan(0);
+    }
+
+
+    public Book saveBook(Book book) {
+        return bookRepository.save(book);
     }
 
     public Optional<Book> getBookById(Long id) {
