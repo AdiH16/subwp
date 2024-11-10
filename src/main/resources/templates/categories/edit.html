@@ -2,24 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Uredi Kategoriju</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/CreatePages.css}">
 </head>
 <body>
-<h1>Uredi Kategoriju</h1>
-<form th:action="@{'/categories/' + ${category.id}}" th:object="${category}" method="post">
-  <div>
-    <label for="name">Naziv:</label>
-    <input type="text" id="name" th:field="*{name}" />
-    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-  </div>
-  <div>
-    <label for="description">Opis:</label>
-    <textarea id="description" th:field="*{description}"></textarea>
-  </div>
-  <div>
-    <button type="submit">Ažuriraj</button>
-  </div>
-</form>
-<a th:href="@{/categories}">Nazad na listu</a>
+<div class="container">
+  <h1>Uredi Kategoriju</h1>
+  <form th:action="@{'/categories/' + ${category.id}}" th:object="${category}" method="post" class="category-form">
+
+    <div class="form-group">
+      <label for="name">Naziv:</label>
+      <input type="text" id="name" th:field="*{name}" />
+      <span class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="description">Opis:</label>
+      <textarea id="description" th:field="*{description}" rows="5"></textarea>
+    </div>
+    <div class="form-actions">
+      <a th:href="@{/categories}" class="back-button">Nazad na listu</a>
+      <button type="submit" class="submit-button">Ažuriraj</button>
+    </div>
+  </form>
+</div>
 </body>
 </html>

@@ -1,38 +1,48 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Lista Knjiga</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/ListPages.css}">
 </head>
 <body>
-<h1>Lista Knjiga</h1>
-<a th:href="@{/books/new}">Dodaj Novu Knjigu</a>
-<table>
-  <thead>
-  <tr>
-    <th>Naslov</th>
-    <th>ISBN</th>
-    <th>Autor</th>
-    <th>Kategorija</th>
-    <th>Dostupni Primjerci</th>
-    <th>Akcije</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="book : ${books}">
-    <td th:text="${book.title}">Naslov</td>
-    <td th:text="${book.isbn}">ISBN</td>
-    <td th:text="${book.author.firstName} + ' ' + ${book.author.lastName}">Autor</td>
-    <td th:text="${book.category.name}">Kategorija</td>
-    <td th:text="${book.availableCopies}">Primjerci</td>
-    <td>
-      <a th:href="@{'/books/' + ${book.id} + '/edit'}">Uredi</a>
-      <a th:href="@{'/books/' + ${book.id} + '/delete'}"
-         onclick="return confirm('Da li ste sigurni da želite obrisati ovu knjigu?');">Obriši</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div class="container">
+  <h1>Lista Knjiga</h1>
+  <form th:action="@{/books}" method="get" class="search-bar">
+    <input type="text" name="title" th:value="${searchQuery}" placeholder="Pretraži knjige..." />
+    <button type="submit">Pretraži</button>
+  </form>
+  <a class="add-button" th:href="@{/books/new}">Dodaj Novu Knjigu</a>
+  <table>
+    <thead>
+    <tr>
+      <th>Naslov</th>
+      <th>ISBN</th>
+      <th>Autor</th>
+      <th>Kategorija</th>
+      <th>Dostupni Primjerci</th>
+      <th>Akcije</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${books.isEmpty()}" style="text-align:center;">
+      <td colspan="6">Nema tražene knjige</td>
+    </tr>
+    <tr th:each="book : ${books}">
+      <td th:text="${book.title}">Naslov</td>
+      <td th:text="${book.isbn}">ISBN</td>
+      <td th:text="${book.author.firstName} + ' ' + ${book.author.lastName}">Autor</td>
+      <td th:text="${book.category.name}">Kategorija</td>
+      <td class="centered" th:text="${book.availableCopies}">Primjerci</td>
+      <td class="action-buttons">
+        <a class="edit-button" th:href="@{'/books/' + ${book.id} + '/edit'}">Uredi</a>
+        <form th:action="@{'/books/' + ${book.id} + '/delete'}" method="get"
+              onsubmit="return confirm('Da li ste sigurni da želite obrisati ovu knjigu?');" style="display:inline;">
+          <button type="submit" class="delete-button">Obriši</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 </body>
 </html>

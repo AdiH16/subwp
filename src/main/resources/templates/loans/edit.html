@@ -2,46 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Uredi Zaduživanje</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/CreatePages.css}">
 </head>
 <body>
-<h1>Uredi Zaduživanje</h1>
-<form th:action="@{'/loans/' + ${loan.id}}" th:object="${loan}" method="post">
-  <div>
-    <label for="book">Knjiga:</label>
-    <select id="book" th:field="*{book.id}">
-      <option value="" disabled>Izaberite knjigu</option>
-      <option th:each="book : ${books}"
-              th:value="${book.id}"
-              th:text="${book.title}"
-              th:selected="${book.id} == ${loan.book.id}"></option>
-    </select>
-    <span th:if="${#fields.hasErrors('book')}" th:errors="*{book}"></span>
-  </div>
-  <div>
-    <label for="user">Korisnik:</label>
-    <select id="user" th:field="*{user.id}">
-      <option value="" disabled>Izaberite korisnika</option>
-      <option th:each="user : ${users}"
-              th:value="${user.id}"
-              th:text="${user.username}"
-              th:selected="${user.id} == ${loan.user.id}"></option>
-    </select>
-    <span th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span>
-  </div>
-  <div>
-    <label for="loanDate">Datum Zaduživanja:</label>
-    <input type="date" id="loanDate" th:field="*{loanDate}" />
-    <span th:if="${#fields.hasErrors('loanDate')}" th:errors="*{loanDate}"></span>
-  </div>
-  <div>
-    <label for="returnDate">Datum Povratka:</label>
-    <input type="date" id="returnDate" th:field="*{returnDate}" />
-  </div>
-  <div>
-    <button type="submit">Ažuriraj</button>
-  </div>
-</form>
-<a th:href="@{/loans}">Nazad na listu</a>
+<div class="container">
+  <h1>Uredi Zaduživanje</h1>
+  <form th:action="@{'/loans/' + ${loan.id}}" th:object="${loan}" method="post" class="loan-form">
+
+    <div class="form-group">
+      <label for="book">Knjiga:</label>
+      <select id="book" th:field="*{book.id}">
+        <option value="" disabled>Izaberite knjigu</option>
+        <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"
+                th:selected="${book.id} == ${loan.book.id}"></option>
+      </select>
+      <span class="error-message" th:if="${#fields.hasErrors('book')}" th:errors="*{book}"></span>
+    </div>
+    <div class="form-group">
+      <label for="user">Korisnik:</label>
+      <select id="user" th:field="*{user.id}">
+        <option value="" disabled>Izaberite korisnika</option>
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"
+                th:selected="${user.id} == ${loan.user.id}"></option>
+      </select>
+      <span class="error-message" th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span>
+    </div>
+    <div class="form-group">
+      <label for="loanDate">Datum Zaduživanja:</label>
+      <input type="date" id="loanDate" th:field="*{loanDate}" />
+      <span class="error-message" th:if="${#fields.hasErrors('loanDate')}" th:errors="*{loanDate}"></span>
+    </div>
+    <div class="form-group">
+      <label for="returnDate">Datum Povratka:</label>
+      <input type="date" id="returnDate" th:field="*{returnDate}" />
+    </div>
+    <div class="form-actions">
+      <a th:href="@{/loans}" class="back-button">Nazad na listu</a>
+      <button type="submit" class="submit-button">Ažuriraj</button>
+    </div>
+  </form>
+</div>
 </body>
 </html>

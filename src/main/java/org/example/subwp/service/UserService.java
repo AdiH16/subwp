@@ -42,6 +42,7 @@ public class UserService {
         return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
+
     public Optional<User> getUserByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
@@ -66,6 +67,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+
     public User updateUser(User user) {
         Optional<User> existingUserOpt = userRepository.findById(user.getId());
         if (existingUserOpt.isPresent()) {
@@ -84,5 +86,15 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("Korisnik sa ID " + user.getId() + " nije pronađen.");
         }
+    }
+
+
+
+
+
+
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

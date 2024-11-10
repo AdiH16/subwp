@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
@@ -33,8 +34,18 @@ public class BookController {
     private CategoryService categoryService;
 
     @GetMapping
-    public String listBooks(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+    public String listBooks(@RequestParam(value = "title", required = false) String title, Model model) {
+        List<Book> books;
+
+
+        if (title != null && !title.isEmpty()) {
+            books = bookService.findBooksByTitle(title);
+        } else {
+            books = bookService.getAllBooks();
+        }
+
+        model.addAttribute("books", books);
+        model.addAttribute("searchQuery", title);
         return "books/list";
     }
 
@@ -55,31 +66,35 @@ public class BookController {
 
     @PostMapping("/new")
     public String createBook(@Valid @ModelAttribute("book") Book book, BindingResult result, Model model) {
+        System.out.println("Creating book with ISBN: " + book.getIsbn());
+
         if (result.hasErrors()) {
             model.addAttribute("authors", authorService.getAllAuthors());
             model.addAttribute("categories", categoryService.getAllCategories());
-
-
-            System.out.println("Validation errors: " + result.getAllErrors());
-
             return "books/create";
         }
 
 
-        Long authorId = book.getAuthor().getId();
-        Author author = authorService.getAuthorById(authorId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid author Id:" + authorId));
+        Book existingBook = bookService.findByIsbn(book.getIsbn());
+        if (existingBook != null) {
+            result.rejectValue("isbn", "error.book", "ISBN već postoji!");
+            model.addAttribute("authors", authorService.getAllAuthors());
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "books/create";
+        }
+
+        Author author = authorService.getAuthorById(book.getAuthor().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid author Id"));
         book.setAuthor(author);
 
-
-        Long categoryId = book.getCategory().getId();
-        Category category = categoryService.getCategoryById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + categoryId));
+        Category category = categoryService.getCategoryById(book.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id"));
         book.setCategory(category);
 
         bookService.saveBook(book);
         return "redirect:/books";
     }
+
 
 
     @GetMapping("/{id}/edit")
@@ -92,23 +107,45 @@ public class BookController {
         return "books/edit";
     }
 
+
     @PostMapping("/{id}")
-    public String updateBook(@PathVariable Long id, @Valid @ModelAttribute("book") Book book,
-                             BindingResult result, Model model) {
+    public String updateBook(@PathVariable Long id,
+                             @Valid @ModelAttribute("book") Book book,
+                             BindingResult result,
+                             Model model) {
         if (result.hasErrors()) {
-            book.setId(id);
             model.addAttribute("authors", authorService.getAllAuthors());
             model.addAttribute("categories", categoryService.getAllCategories());
             return "books/edit";
         }
+
+        Book existingBook = bookService.findByIsbn(book.getIsbn());
+        if (existingBook != null && !existingBook.getId().equals(id)) {
+            result.rejectValue("isbn", "error.book", "ISBN već postoji!");
+            model.addAttribute("authors", authorService.getAllAuthors());
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "books/edit";
+        }
+
         bookService.saveBook(book);
         return "redirect:/books";
     }
+
 
     @GetMapping("/{id}/delete")
     public String deleteBook(@PathVariable Long id) {
         bookService.deleteBookById(id);
         return "redirect:/books";
     }
+
+    @GetMapping("/books/search")
+    public String searchBooks(@RequestParam("title") String title, Model model) {
+        List<Book> books = bookService.findBooksByTitle(title);
+        model.addAttribute("books", books);
+        return "books";
+    }
+
+
+
 }
 

@@ -2,32 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Lista Autora</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/ListPages.css}">
 </head>
 <body>
-<h1>Lista Autora</h1>
-<a th:href="@{/authors/new}">Dodaj Novog Autora</a>
-<table>
-    <thead>
-    <tr>
-        <th>Ime</th>
-        <th>Prezime</th>
-        <th>Biografija</th>
-        <th>Akcije</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="author : ${authors}">
-        <td th:text="${author.firstName}">Ime</td>
-        <td th:text="${author.lastName}">Prezime</td>
-        <td th:text="${author.biography}">Biografija</td>
-        <td>
-            <a th:href="@{'/authors/' + ${author.id} + '/edit'}">Uredi</a>
-            <a th:href="@{'/authors/' + ${author.id} + '/delete'}"
-               onclick="return confirm('Da li ste sigurni da želite obrisati ovog autora?');">Obriši</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <h1>Lista Autora</h1>
+    <a class="add-button" th:href="@{/authors/new}">Dodaj Novog Autora</a>
+    <table>
+        <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Biografija</th>
+            <th>Akcije</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${authors.isEmpty()}" style="text-align:center;">
+            <td colspan="4">Nema dostupnih autora</td>
+        </tr>
+        <tr th:each="author : ${authors}">
+            <td th:text="${author.firstName}">Ime</td>
+            <td th:text="${author.lastName}">Prezime</td>
+            <td th:text="${author.biography}">Biografija</td>
+            <td class="action-buttons">
+                <a class="edit-button" th:href="@{'/authors/' + ${author.id} + '/edit'}">Uredi</a>
+                <form th:action="@{'/authors/' + ${author.id} + '/delete'}" method="get"
+                      onsubmit="return confirm('Da li ste sigurni da želite obrisati ovog autora?');" style="display:inline;">
+                    <button type="submit" class="delete-button">Obriši</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

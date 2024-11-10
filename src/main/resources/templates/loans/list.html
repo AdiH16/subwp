@@ -1,35 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <title>Lista Zaduživanja</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/ListPages.css}">
 </head>
 <body>
-<h1>Lista Zaduživanja</h1>
-<a th:href="@{/loans/new}">Dodaj Novo Zaduživanje</a>
-<table>
-  <thead>
-  <tr>
-    <th>Knjiga</th>
-    <th>Korisnik</th>
-    <th>Datum Zaduživanja</th>
-    <th>Datum Povratka</th>
-    <th>Akcije</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="loan : ${loans}">
-    <td th:text="${loan.book.title}">Knjiga</td>
-    <td th:text="${loan.user.username}">Korisnik</td>
-    <td th:text="${#dates.format(loan.loanDate, 'yyyy-MM-dd')}">Datum Zaduživanja</td>
-    <td th:text="${loan.returnDate != null ? #dates.format(loan.returnDate, 'yyyy-MM-dd') : 'N/A'}">Datum Povratka</td>
-    <td>
-      <a th:href="@{'/loans/' + ${loan.id} + '/edit'}">Uredi</a>
-      <a th:href="@{'/loans/' + ${loan.id} + '/delete'}"
-         onclick="return confirm('Da li ste sigurni da želite obrisati ovo zaduživanje?');">Obriši</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div class="container">
+  <h1>Lista Zaduživanja</h1>
+  <a class="add-button" th:href="@{/loans/new}">Dodaj Novo Zaduživanje</a>
+  <table>
+    <thead>
+    <tr>
+      <th>Knjiga</th>
+      <th>Korisnik</th>
+      <th>Datum Zaduživanja</th>
+      <th>Datum Povratka</th>
+      <th>Akcije</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${loans.isEmpty()}" style="text-align:center;">
+      <td colspan="5">Nema dostupnih zaduživanja</td>
+    </tr>
+    <tr th:each="loan : ${loans}">
+      <td th:text="${loan.book.title}">Knjiga</td>
+      <td th:text="${loan.user.username}">Korisnik</td>
+      <td th:text="${#dates.format(loan.loanDate, 'yyyy-MM-dd')}">Datum Zaduživanja</td>
+      <td th:text="${loan.returnDate != null ? #dates.format(loan.returnDate, 'yyyy-MM-dd') : 'N/A'}">Datum Povratka</td>
+      <td class="action-buttons">
+        <form th:action="@{'/loans/' + ${loan.id} + '/delete'}" method="get"
+              onsubmit="return confirm('Da li ste sigurni da želite obrisati ovo zaduživanje?');">
+          <button type="submit" class="delete-button">Obriši</button>
+        </form>
+        <a class="edit-button" sec:authorize="hasRole('ADMIN')" th:href="@{'/loans/' + ${loan.id} + '/edit'}">Uredi</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 </body>
 </html>

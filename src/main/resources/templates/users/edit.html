@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Uredi Korisnika</h1>
+
 <form th:action="@{'/users/' + ${user.id}}" th:object="${user}" method="post">
   <div>
     <label for="username">Korisničko Ime:</label>
@@ -14,7 +15,8 @@
   </div>
   <div>
     <label for="password">Lozinka:</label>
-    <input type="password" id="password" th:field="*{password}" placeholder="Ostavite prazno ako ne menjate lozinku" />
+
+    <input type="password" id="password" th:field="*{password}" value="********" placeholder="********" />
     <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
   </div>
   <div>
@@ -45,5 +47,7 @@
   </div>
 </form>
 <a th:href="@{/users}">Nazad na listu</a>
+
+
 </body>
 </html>

@@ -47,23 +47,39 @@ public class LoanController {
 
     @GetMapping
     public String listLoans(Model model, Authentication authentication) {
-        String currentUsername = authentication.getName();
-        User currentUser = userService.getUserByUsername(currentUsername).orElse(null);
+        try {
 
-        List<Loan> loans;
-        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            if (authentication == null) {
+                System.out.println("Authentication object is null");
+                return "redirect:/login";
+            }
 
-        if (isAdmin) {
-            loans = loanService.getAllLoans();
-        } else if (currentUser != null) {
-            loans = loanService.getLoansByUserId(currentUser.getId());
-        } else {
-            loans = List.of();
+            String currentUsername = authentication.getName();
+            System.out.println("Logged-in username: " + currentUsername);
+            User currentUser = userService.getUserByUsername(currentUsername).orElse(null);
+            if (currentUser == null) {
+                System.out.println("No user found with username: " + currentUsername);
+                return "redirect:/login";
+            }
+
+            boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            System.out.println("Is Admin: " + isAdmin);
+            List<Loan> loans;
+
+            if (isAdmin) {
+                loans = loanService.getAllLoans();
+            } else {
+                loans = loanService.getLoansByUserId(currentUser.getId());
+            }
+            model.addAttribute("loans", loans);
+            return "loans/list";
+        } catch (Exception e) {
+            System.err.println("Error fetching loans: " + e.getMessage());
+            e.printStackTrace();
+            return "error/500";
         }
-
-        model.addAttribute("loans", loans);
-        return "loans/list";
     }
+
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
@@ -97,9 +113,6 @@ public class LoanController {
         loanService.saveLoan(loan);
         return "redirect:/loans";
     }
-
-
-
 
 
     @GetMapping("/{id}/edit")

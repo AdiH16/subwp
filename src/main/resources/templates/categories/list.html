@@ -2,30 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Lista Kategorija</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/ListPages.css}">
 </head>
 <body>
-<h1>Lista Kategorija</h1>
-<a th:href="@{/categories/new}">Dodaj Novu Kategoriju</a>
-<table>
-  <thead>
-  <tr>
-    <th>Naziv</th>
-    <th>Opis</th>
-    <th>Akcije</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="category : ${categories}">
-    <td th:text="${category.name}">Naziv</td>
-    <td th:text="${category.description}">Opis</td>
-    <td>
-      <a th:href="@{'/categories/' + ${category.id} + '/edit'}">Uredi</a>
-      <a th:href="@{'/categories/' + ${category.id} + '/delete'}"
-         onclick="return confirm('Da li ste sigurni da želite obrisati ovu kategoriju?');">Obriši</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div class="container">
+  <h1>Lista Kategorija</h1>
+  <a class="add-button" th:href="@{/categories/new}">Dodaj Novu Kategoriju</a>
+  <table>
+    <thead>
+    <tr>
+      <th>Naziv</th>
+      <th>Opis</th>
+      <th>Akcije</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${categories.isEmpty()}" style="text-align:center;">
+      <td colspan="3">Nema dostupnih kategorija</td>
+    </tr>
+    <tr th:each="category : ${categories}">
+      <td th:text="${category.name}">Naziv</td>
+      <td th:text="${category.description}">Opis</td>
+      <td class="action-buttons">
+        <a class="edit-button" th:href="@{'/categories/' + ${category.id} + '/edit'}">Uredi</a>
+        <form th:action="@{'/categories/' + ${category.id} + '/delete'}" method="get"
+              onsubmit="return confirm('Da li ste sigurni da želite obrisati ovu kategoriju?');" style="display:inline;">
+          <button type="submit" class="delete-button">Obriši</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 </body>
 </html>

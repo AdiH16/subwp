@@ -19,6 +19,8 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @Transient
+    private boolean isNew;
 
     @NotNull(message = "Lozinka je obavezna")
     @Size(min = 6, message = "Lozinka mora imati najmanje 6 karaktera")
@@ -107,4 +109,5 @@ public class User {
     public void setLoans(Set<Loan> loans) {
         this.loans = loans;
     }
+    public boolean isNew() {return this.id == null; }
 }
