@@ -6,6 +6,13 @@
   <link rel="stylesheet" th:href="@{/css/ListPages.css}">
 </head>
 <body>
+<div sec:authorize="hasRole('ADMIN')" class="navbar">
+  <span class="logo">Sistem upravljanja bibliotekama</span>
+  <a th:href="@{/books}">Knjige</a>
+  <a th:href="@{/categories}">Kategorije</a>
+  <a th:href="@{/authors}">Autori</a>
+  <a th:href="@{/loans}">Zaduživanja</a>
+</div>
 <div class="container">
   <h1>Lista Zaduživanja</h1>
   <a class="add-button" th:href="@{/loans/new}">Dodaj Novo Zaduživanje</a>

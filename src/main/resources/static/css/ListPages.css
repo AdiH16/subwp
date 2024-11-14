@@ -5,17 +5,50 @@ body {
     margin: 0;
     padding: 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navbar {
+    background-color: #2A5934;
+    overflow: hidden;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.navbar a:hover {
+    background-color: #1E4A27;
+    color: white;
+}
+
+.navbar .logo {
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 14px 20px;
 }
 
 .container {
     max-width: 800px;
+    width: 100%;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 h1 {
     text-align: center;
@@ -146,3 +179,35 @@ button {
     cursor: pointer;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 500px;
+}
+.close-button {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.error-message {
+    color: #721c24;
+}
+.success-message {
+    color: #155724;
+}

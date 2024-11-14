@@ -8,6 +8,7 @@ import org.example.subwp.service.BookService;
 import org.example.subwp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -133,8 +135,13 @@ public class BookController {
 
 
     @GetMapping("/{id}/delete")
-    public String deleteBook(@PathVariable Long id) {
-        bookService.deleteBookById(id);
+    public String deleteBook(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            bookService.deleteBookById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Knjiga je uspješno obrisana.");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Ne možete obrisati ovu knjigu jer postoje posuđene kopije povezane s njom.");
+        }
         return "redirect:/books";
     }
 

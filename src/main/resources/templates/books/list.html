@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <title>Lista Knjiga</title>
   <link rel="stylesheet" th:href="@{/css/ListPages.css}">
 </head>
 <body>
+<div sec:authorize="hasRole('ADMIN')" class="navbar">
+  <span class="logo">Sistem upravljanja bibliotekama</span>
+  <a th:href="@{/books}">Knjige</a>
+  <a th:href="@{/categories}">Kategorije</a>
+  <a th:href="@{/authors}">Autori</a>
+  <a th:href="@{/loans}">Zaduživanja</a>
+</div>
 <div class="container">
   <h1>Lista Knjiga</h1>
   <form th:action="@{/books}" method="get" class="search-bar">
@@ -44,5 +52,24 @@
     </tbody>
   </table>
 </div>
+<div id="messageModal" class="modal" th:if="${errorMessage != null} or ${successMessage != null}">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeModal()">&times;</span>
+    <p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p>
+    <p th:if="${successMessage}" class="success-message" th:text="${successMessage}"></p>
+  </div>
+</div>
+<script>
+  function closeModal() {
+    document.getElementById('messageModal').style.display = 'none';
+  }
+
+  window.onload = function() {
+    var modal = document.getElementById('messageModal');
+    if (modal) {
+      modal.style.display = 'block';
+    }
+  }
+</script>
 </body>
 </html>

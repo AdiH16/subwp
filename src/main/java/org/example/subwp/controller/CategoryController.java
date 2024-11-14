@@ -5,6 +5,8 @@ import org.example.subwp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +60,13 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategoryById(id);
+    public String deleteCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            categoryService.deleteCategoryById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Kategorija je uspješno obrisana.");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Ne možete obrisati ovu kategoriju jer postoje posuđene knjige povezane s njom.");
+        }
         return "redirect:/categories";
     }
 }
